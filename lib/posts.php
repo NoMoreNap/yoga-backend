@@ -28,6 +28,9 @@ class Posts extends MySQL
         return $allData;
     }
     public function getById ($id) {
+        if (!ctype_digit($id)) {
+            return false;
+        }
         $data = $this->select('posts','*', "id = $id");
         if (count($data)) {
             $data = $this->dataParse($data);
@@ -35,6 +38,7 @@ class Posts extends MySQL
         } else {
             return false;
         }
+
 
     }
 }
