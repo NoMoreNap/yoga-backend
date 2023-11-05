@@ -3,11 +3,15 @@
 class MySQL {
     public function __construct($host, $user, $pass, $db){
         $ms = mysqli_connect($host, $user, $pass, $db);
+
         {
              if(!$ms){
                  return false;
              }
              $this->ms = $ms;
+             mysqli_query($this->ms,"SET NAMES 'utf8'");
+             mysqli_query($this->ms,"SET CHARACTER SET 'utf8'");
+             mysqli_query($this->ms,"SET SESSION collation_connection = 'utf8_general_ci'");
              return $ms;
         }
     }

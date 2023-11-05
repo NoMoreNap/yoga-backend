@@ -1,5 +1,5 @@
 <?php
-require_once '../init.php';
+require '../init.php';
 
 $DB->query('SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";');
 $DB->query('START TRANSACTION;');
