@@ -23,7 +23,7 @@
 |--------------------------------|:-----------------------------------------------------------------------:| 
 | _Получить общую информацию_    |                GET - https://bayonetta.ru/posts/general                 | 
 | _Получить все записи_          |                  GET - https://bayonetta.ru/posts/all                   |
-| _Добавить запись по id_        |                 POST - https://bayonetta.ru/posts/<id>                  |
+| _Поиск по id_        |                 GET - https://bayonetta.ru/posts/<id>                  |
 
 
 #### Ответы:
