@@ -40,4 +40,9 @@ class MySQL {
         $query = "SELECT $fields from $table WHERE $condition";
         return mysqli_fetch_all($this->query($query),1);
     }
+
+    public function update($table,$upd_condition, $condition = 1) {
+        $query = "UPDATE $table set $upd_condition WHERE $condition";
+        return $this->query($query);
+    }
 }

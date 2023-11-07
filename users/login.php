@@ -34,45 +34,48 @@ if (!isset($parsed_body['login']) || !isset($parsed_body['pass'])) {
     Response::error($gen_error, 422);
 }
 
-
 $login = $_POST['login'];
-$pass = password_hash($_POST['pass'],PASSWORD_BCRYPT);
+$pass = $_POST['pass'];
 
-
-$is_login_exist = $DB->select('users', 'id',"login = '$login'");
-
-if (count($is_login_exist)) {
+$user_data = $DB->select('users', 'id, pass',"login = '$login'");
+if (!$user_data) {
     Response::error(array(
-        'login' => 'Пользователь с таким логином уже существует'
+        'detail' => 'Такого пользователя не существует'
     ));
 }
+$is_pass_true = password_verify($pass, $user_data[0]['pass']);
 
-if(strlen($_POST['pass']) < 5) {
+if (!$is_pass_true) {
     Response::error(array(
-        'pass' => 'Пароль должен быть более 5-ти символов'
+        'detail' => 'Неверный пароль'
     ));
-}
+} else {
+    $time = time();
+    $token = md5($time);
+    $user_id = $user_data[0]['id'];
 
-$result = $DB->insert('users','login,pass',[$login,$pass]);
-$time = time();
-$token = md5($time);
-if ($result) {
-    $user_data = $DB->select('users','id',"login = '$login'")[0];
-    try {
-        $DB->insert('auth', 'user_id,auth_token,login_ts,logout_ts', [$user_data['id'], $token, $time, 0]);
-    } catch (Exception $e) {
-        var_dump($e);
+    $auth_data = $DB->select('auth','auth_token,login_ts')[0];
+
+    $is_login_already = md5($auth_data['login_ts']) == $auth_data['auth_token'];
+
+    if ($is_login_already) {
+        Response::error(array(
+            'detail' => 'Вы уже вошли в систему'
+        ));
     }
+
+    $DB->update('auth', "auth_token = '$token', login_ts = $time, logout_ts = 0", "user_id = $user_id");
     Response::success(array(
-        'detail' => 'Вы успешно зарегистрировались',
+        'detail' => 'Вы вошли в систему',
         'data' => array(
-            'user_id' => (int) $user_data['id'],
+            'user_id' => (int) $user_id,
             'auth_token' => $token
         )
     ));
 
-} else {
-    Response::error(array(
-        'detail' => 'Неизвестная ошибка'
-    ));
 }
+
+
+
+
+

@@ -8,13 +8,76 @@
 
 ----
 
-#### Ручки:
-1. Пользователи
+## Ручки:
+#### 1. Пользователи
+- При регистрации или входе вы получаете токен и id пользователя.
+- Эти же параметры используются в дальнейшем и при выходе.
 
-| Описание запроса       |                         Пример                          | 
-| ------------- |:-------------------------------------------------------:| 
-| _Зарегистрироваться_    |        POST - https://bayonetta.ru/users/signup         | 
-| Тело| login: String,<br/> pass: String > 5,<br/>email: string |
+| Описание запроса     |                                 Пример                                  | 
+|----------------------|:-----------------------------------------------------------------------:| 
+| _Зарегистрироваться_ |                POST - https://bayonetta.ru/users/signup                 | 
+| Тело                 |                  login: String,<br/> pass: String > 5                   |
+| _Войти_              |                 POST - https://bayonetta.ru/users/login                 | 
+| Тело                 |                  login: String,<br/> pass: String                    |
+| _Выйти_              | GET - https://bayonetta.ru/users/logout?user_id={user_id}&token={token} | 
+
+
+
+
+### Ответы
+##### Responces on success:
+Регистрация
+```json
+{
+	"status": true,
+	"detail": "Вы успешно зарегистрировались",
+	"data": {
+		"user_id": 20,
+		"auth_token": "e55dd5b63acab00ac5634e5b6d3e86d8"
+	}
+}
+```
+Вход
+```json
+{
+	"status": true,
+	"detail": "Вы вошли в систему",
+	"data": {
+		"user_id": 20,
+		"auth_token": "d62401f3038f8a81b79d0760455e4b86"
+	}
+}
+```
+Выход
+```json
+{
+	"status": true,
+	"detail": "Вы успешно вышли"
+}
+```
+##### Responce on error:
+Регистрация
+```json
+{
+  "status": false,
+  "login": "Пользователь с таким логином уже существует"
+}
+```
+Вход
+```json
+{
+	"status": false,
+	"detail": "Вы уже вошли в систему"
+}
+```
+Выход
+```json
+{
+	"status": false,
+	"detail": "Неверный токен"
+}
+```
+
 
 
 2. Посты
@@ -23,12 +86,12 @@
 |--------------------------------|:-----------------------------------------------------------------------:| 
 | _Получить общую информацию_    |                GET - https://bayonetta.ru/posts/general                 | 
 | _Получить все записи_          |                  GET - https://bayonetta.ru/posts/all                   |
-| _Добавить запись по id_        |                 POST - https://bayonetta.ru/posts/<id>                  |
+| _Поиск по id_        |                 GET - https://bayonetta.ru/posts/{id}                  |
 
 
-#### Ответы:
+### Ответы:
 
-Responces on success:
+##### Responces on success:
 ```json
 {
   "status": true,
@@ -59,38 +122,32 @@ Responces on success:
 ```
 ```json
 {
-	"status": true,
-	"data": [
-		{
-			"id": "1",
-			"title": "Йога"
-		},
-		{
-			"id": "2",
-			"title": "Стретчинг"
-		},
-		{
-			"id": "3",
-			"title": "Бодифлекс"
-		},
-		{
-			"id": "4",
-			"title": "Танцевальный фитнес"
-		}
-	]
+  "status": true,
+  "data": [
+    {
+      "id": "1",
+      "title": "Йога"
+    },
+    {
+      "id": "2",
+      "title": "Стретчинг"
+    },
+    {
+      "id": "3",
+      "title": "Бодифлекс"
+    },
+    {
+      "id": "4",
+      "title": "Танцевальный фитнес"
+    }
+  ]
 }
 ```
-Responce on error:
+##### Responce on error:
 ```json
 {
   "status": false,
   "detail": "Указан неверный id"
-}
-```
-```json
-{
-	"status": false,
-	"login": "Пользователь с таким логином уже существует"
 }
 ```
 
